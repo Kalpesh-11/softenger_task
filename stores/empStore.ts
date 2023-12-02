@@ -3,6 +3,18 @@ import { create } from "zustand";
 const key = "emp";
 const empStore = create<empStoreProps>((set) => ({
   employees: [],
+  currentTab: 0,
+  selectedEmployeeID: 0,
+  editEmployee: {
+    id: 0,
+    employee_name: "",
+    employee_salary: 0,
+    employee_age: 0,
+    profile_image: "",
+  },
+  setCurrentTab: (currentTab) => {
+    set({ currentTab });
+  },
   setEmployee: async () => {
     if (!localStorage.getItem(key)) {
       const res = await fetch(
@@ -32,7 +44,64 @@ const empStore = create<empStoreProps>((set) => ({
       return { employees: updatedEmployees };
     });
   },
-  removeEmployee: (data) => {},
-  editEmployee: (id) => {},
+  setSelectedEmployeeID: (selectedEmployeeID) => {
+    set({ selectedEmployeeID });
+    empStore.getState().setEditEmployee(selectedEmployeeID);
+  },
+  handleEditEmployee: async (id, newData) => {
+    let uploadedFileName = "";
+    if (newData.profile_image[0]) {
+      const formData = new FormData();
+      formData.set("file", newData.profile_image[0]);
+      const response = await fetch("api/fileUploader", {
+        method: "POST",
+        body: formData,
+      });
+      if (response.ok) {
+        const responseData = await response.json();
+        uploadedFileName = newData.profile_image[0].name;
+        console.log("File uploaded successfully. FileName:", uploadedFileName);
+      } else {
+        console.error("File upload failed. Status:", response.status);
+      }
+    }
+    console.log(uploadedFileName);
+
+    set((state) => {
+      const updatedEmployees = state.employees.map((employee) =>
+        employee.id === id
+          ? {
+              ...employee,
+              ...newData,
+              profile_image: uploadedFileName || employee.profile_image,
+            }
+          : employee
+      );
+
+      localStorage.setItem(key, JSON.stringify(updatedEmployees));
+      return { employees: updatedEmployees };
+    });
+  },
+  setEditEmployee: (id) => {
+    set((state) => {
+      const editEmployee = state.employees.find(
+        (employee) => employee.id === id
+      );
+      return {
+        editEmployee: editEmployee,
+      };
+    });
+  },
+  removeEmployee: (employeeId) => {
+    set((state) => {
+      const updatedEmployees = state.employees.filter(
+        (employee) => employee.id !== employeeId
+      );
+
+      localStorage.setItem(key, JSON.stringify(updatedEmployees));
+
+      return { employees: updatedEmployees };
+    });
+  },
 }));
 export default empStore;
