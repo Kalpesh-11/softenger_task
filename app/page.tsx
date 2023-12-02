@@ -1,5 +1,9 @@
-import Image from "next/image";
+import { EmployeeTabs } from "@/components";
 
-export default function Home() {
-  return <main className="p-24"></main>;
+export default async function Home() {
+  return (
+    <main className="p-24">
+      <EmployeeTabs />
+    </main>
+  );
 }
