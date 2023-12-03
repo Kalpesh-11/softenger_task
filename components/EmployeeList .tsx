@@ -1,25 +1,28 @@
-import React from "react";
-import ViewEmployee from "./ViewEmployee";
+import { EmployeeCard } from "@/components";
 import empStore from "@/stores/empStore";
 
 const EmployeeList = () => {
   const { employees, setSelectedEmployeeID, setCurrentTab, removeEmployee } =
     empStore();
-  const handleEdit = (employeeId) => {
-    setSelectedEmployeeID(employeeId);
+  const handleEdit = (employeeId: number) => {
     setCurrentTab(1);
+    setSelectedEmployeeID(employeeId);
   };
 
-  const handleRemove = (employeeId) => {
+  const handleRemove = (employeeId: number) => {
     removeEmployee(employeeId);
   };
-
   return (
-    <ViewEmployee
-      employees={employees}
-      onEdit={handleEdit}
-      onRemove={handleRemove}
-    />
+    <div className="flex flex-wrap gap-4 justify-center">
+      {employees.map((employee) => (
+        <EmployeeCard
+          key={employee.id}
+          employee={employee}
+          onEdit={handleEdit}
+          onRemove={handleRemove}
+        />
+      ))}
+    </div>
   );
 };
 

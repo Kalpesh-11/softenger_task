@@ -14,8 +14,9 @@ const empStore = create<empStoreProps>((set) => ({
   },
   setCurrentTab: (currentTab) => {
     set({ currentTab });
+    set({ selectedEmployeeID: 0 });
   },
-  setEmployee: async () => {
+  setEmployees: async () => {
     if (!localStorage.getItem(key)) {
       const res = await fetch(
         "https://dummy.restapiexample.com/api/v1/employees"
@@ -43,6 +44,7 @@ const empStore = create<empStoreProps>((set) => ({
       localStorage.setItem(key, JSON.stringify(updatedEmployees));
       return { employees: updatedEmployees };
     });
+    return true;
   },
   setSelectedEmployeeID: (selectedEmployeeID) => {
     set({ selectedEmployeeID });
@@ -50,7 +52,7 @@ const empStore = create<empStoreProps>((set) => ({
   },
   handleEditEmployee: async (id, newData) => {
     let uploadedFileName = "";
-    if (newData.profile_image[0]) {
+    if (newData.profile_image && newData.profile_image[0]) {
       const formData = new FormData();
       formData.set("file", newData.profile_image[0]);
       const response = await fetch("api/fileUploader", {
@@ -58,15 +60,9 @@ const empStore = create<empStoreProps>((set) => ({
         body: formData,
       });
       if (response.ok) {
-        const responseData = await response.json();
-        uploadedFileName = newData.profile_image[0].name;
-        console.log("File uploaded successfully. FileName:", uploadedFileName);
-      } else {
-        console.error("File upload failed. Status:", response.status);
+        uploadedFileName = newData.profile_image[0]?.name;
       }
     }
-    console.log(uploadedFileName);
-
     set((state) => {
       const updatedEmployees = state.employees.map((employee) =>
         employee.id === id
@@ -81,6 +77,7 @@ const empStore = create<empStoreProps>((set) => ({
       localStorage.setItem(key, JSON.stringify(updatedEmployees));
       return { employees: updatedEmployees };
     });
+    return true;
   },
   setEditEmployee: (id) => {
     set((state) => {

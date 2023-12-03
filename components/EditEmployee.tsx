@@ -1,18 +1,31 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { addEmployeeValidationSchema } from "@/validations";
+import { editEmployeeValidationSchema } from "@/validations";
 import empStore from "@/stores/empStore";
-import InputLabel from "@mui/material/InputLabel";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
+import { SelectChangeEvent } from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import { EditFormProps } from "@/types";
-import { useEffect } from "react";
-import Image from "next/image";
+import {
+  Typography,
+  Button,
+  TextField,
+  MenuItem,
+  Select,
+  InputLabel,
+  Snackbar,
+  Alert,
+} from "@mui/material";
+import { useEffect, useState, ChangeEvent } from "react";
 export default function EditEmployee() {
+  const [isSuccessSnackbarOpen, setIsSuccessSnackbarOpen] = useState(false);
+  const [fileChange, setFileChange] = useState<string | null>();
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files;
+    if (selectedFile) {
+      const fileName = selectedFile[0].name;
+      setFileChange(fileName);
+    }
+  };
   const {
     selectedEmployeeID,
     setSelectedEmployeeID,
@@ -23,13 +36,17 @@ export default function EditEmployee() {
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(addEmployeeValidationSchema),
+    resolver: yupResolver(editEmployeeValidationSchema),
   });
-  const onsubmit = (data: EditFormProps) => {
+  const onsubmit = async (data: any) => {
     try {
-      handleEditEmployee(selectedEmployeeID, data);
+      const res = await handleEditEmployee(selectedEmployeeID, data);
+      if (res) {
+        setIsSuccessSnackbarOpen(true);
+      }
     } catch (err) {}
   };
   const handleChange = (event: SelectChangeEvent) => {
@@ -46,64 +63,124 @@ export default function EditEmployee() {
   const MenuProps = {
     PaperProps: {
       style: {
-        maxHeight: employees.length * 4.5 + 5,
+        maxHeight: employees.length * 10 + 5,
         width: 250,
       },
     },
   };
+  const handleCloseSuccessSnackbar = () => {
+    setIsSuccessSnackbarOpen(false);
+  };
   return (
     <div>
       <form onSubmit={handleSubmit(onsubmit)}>
-        <FormControl required sx={{ m: 1, width: 300, mt: 3 }}>
-          <InputLabel id="demo-simple-select-readonly-label">Age</InputLabel>
+        <FormControl required sx={{ m: 1, mt: 3 }} fullWidth>
+          <InputLabel id="demo-simple-select-readonly-label">
+            Select Employee
+          </InputLabel>
           <Select
             value={selectedEmployeeID.toString()}
-            label="Age *"
+            label="Select Employee *"
             onChange={handleChange}
             MenuProps={MenuProps}
+            className="mb-4"
           >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
             {employees.map((employee) => {
               return (
-                <MenuItem value={employee.id}>
+                <MenuItem value={employee.id} key={employee.id}>
                   {employee.id} - {employee.employee_name}
                 </MenuItem>
               );
             })}
           </Select>
+
           <TextField
+            InputLabelProps={{ shrink: true }}
             label="Employee Name"
             variant="outlined"
             {...register("employee_name")}
             helperText={errors.employee_name?.message}
             error={errors.employee_name?.message ? true : false}
+            disabled={selectedEmployeeID ? false : true}
+            className="mb-4"
           />
-          <TextField
-            label="Salary"
-            variant="outlined"
-            type="number"
-            {...register("employee_salary")}
-            helperText={errors.employee_salary?.message}
-            error={errors.employee_salary?.message ? true : false}
-          />
-          <TextField
-            label="Age"
-            variant="outlined"
-            type="number"
-            {...register("employee_age")}
-            helperText={errors.employee_age?.message}
-            error={errors.employee_age?.message ? true : false}
-          />
-
-          <input accept="image/*" type="file" {...register("profile_image")} />
-
-          <Button variant="outlined" type="submit">
-            Signup
-          </Button>
+          <div className="flex flex-col mb-6 md:flex-row md:space-x-4 w-full">
+            <TextField
+              InputLabelProps={{ shrink: true }}
+              label="Salary"
+              variant="outlined"
+              type="number"
+              {...register("employee_salary")}
+              helperText={errors.employee_salary?.message}
+              error={errors.employee_salary?.message ? true : false}
+              disabled={selectedEmployeeID ? false : true}
+              fullWidth
+            />
+            <TextField
+              InputLabelProps={{ shrink: true }}
+              label="Age"
+              variant="outlined"
+              type="number"
+              {...register("employee_age")}
+              helperText={errors.employee_age?.message}
+              error={errors.employee_age?.message ? true : false}
+              disabled={selectedEmployeeID ? false : true}
+              fullWidth
+            />
+          </div>
+          <div className="flex flex-col mb-6 md:flex-row md:space-x-4 w-full">
+            <Button
+              variant="outlined"
+              className="w-1/2 items-center"
+              color="secondary"
+              onClick={() => {
+                const fileInput = document.getElementById(
+                  "profile_image_input"
+                );
+                if (fileInput) {
+                  fileInput.click();
+                }
+              }}
+            >
+              <input
+                accept="image/*"
+                type="file"
+                id="profile_image_input"
+                hidden
+                {...register("profile_image")}
+                className="mb-4"
+                onChange={handleFileChange}
+              />
+              Upload Image
+            </Button>
+            {fileChange && (
+              <Typography color="textSecondary" className="mt-4">
+                {fileChange}
+              </Typography>
+            )}
+          </div>
+          <div className="w-full flex justify-center">
+            <Button
+              variant="outlined"
+              type="submit"
+              className="w-1/2 items-center"
+              disabled={selectedEmployeeID ? false : true}
+              color="secondary"
+            >
+              Update Employee
+            </Button>
+          </div>
         </FormControl>
       </form>
+      <Snackbar
+        open={isSuccessSnackbarOpen}
+        autoHideDuration={5000}
+        onClose={handleCloseSuccessSnackbar}
+      >
+        <Alert onClose={handleCloseSuccessSnackbar} severity="success">
+          Employee updated successfully!
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

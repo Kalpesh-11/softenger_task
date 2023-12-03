@@ -3,7 +3,7 @@ export interface employee {
   employee_name: string;
   employee_salary: number;
   employee_age: number;
-  profile_image?: string | null;
+  profile_image?: string;
 }
 export interface empStoreProps {
   employees: employee[];
@@ -11,12 +11,15 @@ export interface empStoreProps {
   selectedEmployeeID: number;
   editEmployee: employee;
   setCurrentTab: (id: number) => void;
-  setEmployee: () => void;
-  addEmployee: (data: AddFormProps) => void;
-  removeEmployee: (id: number) => void;
+  setEmployees: () => void;
+  addEmployee: (data: AddFormProps) => boolean;
   setSelectedEmployeeID: (id: number) => void;
-  handleEditEmployee: (id: number, data: EditFormProps) => void;
+  handleEditEmployee: (
+    id: number,
+    data: EditFormProps
+  ) => boolean | Promise<boolean>;
   setEditEmployee: (id: number) => void;
+  removeEmployee: (id: number) => void;
 }
 export interface TabPanelProps {
   children?: React.ReactNode;
@@ -33,5 +36,10 @@ export interface EditFormProps {
   employee_name: string;
   employee_salary: number;
   employee_age: number;
-  profile_image?: string | null;
+  profile_image?: FileList | null | undefined;
+}
+export interface EmployeeCardProps {
+  employee: employee;
+  onEdit: (employeeId: number) => void;
+  onRemove: (employeeId: number) => void;
 }

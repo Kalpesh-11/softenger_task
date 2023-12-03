@@ -9,6 +9,7 @@ function TabPanelWrap(props: TabPanelProps) {
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}
+      className="min-h-[60vh] h-[70vh] overflow-y-auto"
     >
       {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
