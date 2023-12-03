@@ -57,7 +57,7 @@ export default function AddEmployee() {
               {...register("employee_salary")}
               helperText={errors.employee_salary?.message}
               error={errors.employee_salary?.message ? true : false}
-              className="mb-4 md:mb-0 flex-1"
+              sx={{ mb: { xs: 2 } }}
               fullWidth
             />
 
@@ -69,7 +69,6 @@ export default function AddEmployee() {
               {...register("employee_age")}
               helperText={errors.employee_age?.message}
               error={errors.employee_age?.message ? true : false}
-              className="mb-4 md:mb-0 flex-1"
             />
           </div>
           <div className="w-full flex justify-center">

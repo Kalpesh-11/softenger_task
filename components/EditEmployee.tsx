@@ -108,6 +108,7 @@ export default function EditEmployee() {
               error={errors.employee_salary?.message ? true : false}
               disabled={selectedEmployeeID ? false : true}
               fullWidth
+              sx={{ mb: { xs: 2 } }}
             />
             <TextField
               InputLabelProps={{ shrink: true }}
