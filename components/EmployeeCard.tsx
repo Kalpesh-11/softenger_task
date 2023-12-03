@@ -1,12 +1,4 @@
-import React from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  IconButton,
-  Avatar,
-} from "@mui/material";
+import { Card, CardContent, Typography, Button, Avatar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { EmployeeCardProps } from "@/types";

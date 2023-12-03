@@ -6,7 +6,6 @@ import empStore from "@/stores/empStore";
 import { SelectChangeEvent } from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import {
-  Typography,
   Button,
   TextField,
   MenuItem,
@@ -15,7 +14,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import { useEffect, useState, ChangeEvent } from "react";
+import { useEffect, useState } from "react";
 export default function EditEmployee() {
   const [isSuccessSnackbarOpen, setIsSuccessSnackbarOpen] = useState(false);
   const {
