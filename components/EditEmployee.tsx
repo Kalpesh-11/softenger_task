@@ -135,7 +135,7 @@ export default function EditEmployee() {
             <Button
               variant="outlined"
               type="submit"
-              className="w-1/2 items-center"
+              className="w-full items-center md:w-1/2"
               disabled={selectedEmployeeID ? false : true}
               color="secondary"
             >

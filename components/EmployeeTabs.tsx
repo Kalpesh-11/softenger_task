@@ -44,7 +44,13 @@ export default function EmployeeTabs() {
         indicatorColor="secondary"
         onChange={handleChange}
         aria-label="Employee Dashboard"
-        variant="fullWidth"
+        variant="scrollable"
+        scrollButtons="auto"
+        sx={{
+          "& .MuiTabs-flexContainer": {
+            justifyContent: { xs: "start", md: "center" },
+          },
+        }}
       >
         <Tab
           icon={<AddIcon />}

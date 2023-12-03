@@ -11,7 +11,7 @@ function TabPanelWrap(props: TabPanelProps) {
       {...other}
       className="min-h-[60vh] h-[70vh] overflow-y-auto"
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && <Box sx={{ p: { xs: 1, md: 3 } }}>{children}</Box>}
     </div>
   );
 }

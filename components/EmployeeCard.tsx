@@ -6,7 +6,11 @@ const EmployeeCard = ({ employee, onEdit, onRemove }: EmployeeCardProps) => {
   return (
     <Card
       key={employee.id}
-      style={{ maxWidth: "300px", margin: "10px", width: "28%" }}
+      sx={{
+        maxWidth: "300px",
+        margin: "10px",
+        width: { xs: "80%", md: "28%" },
+      }}
       className="shadow-xl cursor-pointer"
     >
       <CardContent>
@@ -35,7 +39,7 @@ const EmployeeCard = ({ employee, onEdit, onRemove }: EmployeeCardProps) => {
         <Typography color="textSecondary" gutterBottom>
           Age: {employee.employee_age}
         </Typography>
-        <div className="flex mt-4 w-full justify-around gap-2">
+        <div className="flex flex-col backdrop:flex mt-4 w-full justify-around gap-2 md:flex-row">
           <Button
             variant="outlined"
             startIcon={<EditIcon />}

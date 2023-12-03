@@ -76,7 +76,7 @@ export default function AddEmployee() {
             <Button
               variant="outlined"
               type="submit"
-              className="w-1/2 items-center"
+              className="w-full items-center md:w-1/2"
               color="secondary"
             >
               Add Employee
