@@ -38,7 +38,7 @@ const EmployeeCard = ({ employee, onEdit, onRemove }: EmployeeCardProps) => {
             : employee.employee_name.substr(0, 15) + "..."}
         </Typography>
         <Typography color="textSecondary" gutterBottom>
-          Salary: {employee.employee_salary}
+          Salary: {employee.employee_salary.toLocaleString()}
         </Typography>
         <Typography color="textSecondary" gutterBottom>
           Age: {employee.employee_age}
