@@ -41,16 +41,18 @@ export default function AddEmployee() {
           <TextField
             label="Employee Name"
             variant="outlined"
+            color="secondary"
             {...register("employee_name")}
             helperText={errors.employee_name?.message}
             error={errors.employee_name?.message ? true : false}
             fullWidth
-            className="mb-4"
+            sx={{ mb: 2 }}
           />
           <div className="flex flex-col mb-6 md:flex-row md:space-x-4">
             <TextField
               label="Salary"
               variant="outlined"
+              color="secondary"
               type="number"
               {...register("employee_salary")}
               helperText={errors.employee_salary?.message}
@@ -62,6 +64,7 @@ export default function AddEmployee() {
             <TextField
               label="Age"
               variant="outlined"
+              color="secondary"
               type="number"
               {...register("employee_age")}
               helperText={errors.employee_age?.message}

@@ -52,6 +52,7 @@ const empStore = create<empStoreProps>((set) => ({
   },
   handleEditEmployee: async (id, newData) => {
     let uploadedFileName = "";
+    console.log(newData);
     if (newData.profile_image && newData.profile_image[0]) {
       const formData = new FormData();
       formData.set("file", newData.profile_image[0]);
